@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import "antd/dist/reset.css";
+import "./custom.sass"
 
 import {
   DesktopOutlined,
   FileOutlined,
   PieChartOutlined,
 } from "@ant-design/icons";
+
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 
