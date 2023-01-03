@@ -17,7 +17,7 @@ export const App: FC = () => {
 
   return (
     <ConfigProvider locale={ptBR}>
-      <Layout className="layout">
+      <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }} />
         <Content style={{ margin: "16px" }}>
           <div

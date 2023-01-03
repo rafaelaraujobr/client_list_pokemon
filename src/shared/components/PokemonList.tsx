@@ -19,7 +19,7 @@ const PokemonList: FC = () => {
     const [pokemons, setPokemons] = useState<DataType[]>([]);
     const [totalPokemon, setTotalPokemon] = useState(1154);
     const [isLoading, setIsLoading] = useState(false);
-    const [perPage, setPerPage] = useState(20);
+    const [perPage, setPerPage] = useState(18);
     const [currentPage, setCurrentPage] = useState(1);
 
     const onChange: PaginationProps["onChange"] = (page, perPage) => {
@@ -55,7 +55,7 @@ const PokemonList: FC = () => {
     return (
         <>
             <List
-                grid={{ gutter: 5, xs: 1, sm: 2, md: 4, lg: 4, xl: 5, xxl: 5 }}
+                grid={{ gutter: 5, xs: 1, sm: 2, md: 4, lg: 4, xl: 5, xxl: 6 }}
                 dataSource={pokemons}
                 renderItem={(item: DataType) => (
                     <List.Item>

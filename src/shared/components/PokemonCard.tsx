@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import React from "react";
-import { Card } from "antd";
+import { Badge, Card, Image, Progress, Tag } from "antd";
 import { getPokemonByName } from "../services/pokemon.services";
+import Modal from "antd/es/modal/Modal";
 interface DataType {
     name: string;
     url: string;
@@ -9,11 +10,42 @@ interface DataType {
 interface PokemonCardProps {
     pokemon: DataType;
 }
-const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any ) => {
+const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
     const [imagePokemon, setImagePokemon] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [idPokemon, setIdPokemon] = useState<number>(1);
-    const [typePokemon, setTypePokemon] = useState<string>("");
+    const [typePokemon, setTypePokemon] = useState<any[]>([]);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [statsPokemon, setStatsPokemon] = useState<any[]>([]);
+
+    const pad = (number: number, length: number) => {
+        let str = "" + number;
+        while (str.length < length) str = "0" + str;
+        return str;
+    };
+    const getPokemonImageUrl = (id: number) =>
+        `/thumbnails-compressed/${pad(id, 3)}.png`;
+
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleOk = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+
+    const pokemonType = (typePokemon: any) => {
+        return typePokemon
+            ? typePokemon.map(
+                  (type: any) =>
+                      type.type.name[0].toUpperCase() + type.type.name.slice(1)
+              )
+            : null;
+    };
 
     useEffect(() => {
         const getPokemon = async () => {
@@ -24,7 +56,9 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any ) => {
                     console.log(data);
                     setIdPokemon(data.id);
                     setTypePokemon(data.types);
-                    setImagePokemon(data.sprites.front_default);
+                    setStatsPokemon(data.stats);
+                    // setImagePokemon(data.sprites.front_default);
+                    await setImagePokemon(getPokemonImageUrl(data.id));
                 }
             } catch (error) {
                 console.log(error);
@@ -36,13 +70,50 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any ) => {
     }, [pokemon.url]);
 
     return pokemon ? (
-        <Card
-            title={pokemon.name}
-            cover={<img alt={pokemon.name} src={imagePokemon} />}
-            loading={isLoading}
-        >
-            #{idPokemon}
-        </Card>
+        <>
+            <Badge.Ribbon
+                text={`#${idPokemon} -  ${pokemon.name}`}
+                className={`card-pokemon ${pokemonType(typePokemon)}`}
+            >
+                <Card hoverable loading={isLoading} onClick={showModal}>
+                    <Image
+                        // style={{margin: "0 auto"}}
+                        src={`${imagePokemon}`}
+                        preview={false}
+                    />
+                    <p>{pokemonType(typePokemon)}</p>
+                </Card>
+            </Badge.Ribbon>
+            <Modal
+                title={pokemon.name}
+                open={isModalOpen}
+                onCancel={handleCancel}
+                style={{ top: 20 }}
+                footer={null}
+            >
+                <Image src={`${imagePokemon}`} preview={false} />
+                <p>{pokemonType(typePokemon)}</p>
+                {typePokemon.map((type: any) => (
+                    <Tag
+                        className={`card-pokemon 
+                        ${
+                            type.type.name[0].toUpperCase() +
+                            type.type.name.slice(1)
+                        }`}
+                    >
+                        {type.type.name}
+                    </Tag>
+                ))}
+                <div style={{ width: 170 }}>
+                    {statsPokemon.map((stat: any) => (
+                        <Progress
+                            percent={stat.base_stat}
+                            format={(percent) => `${stat.stat.name}`}
+                        />
+                    ))}
+                </div>
+            </Modal>
+        </>
     ) : null;
 };
 
