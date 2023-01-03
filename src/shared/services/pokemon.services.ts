@@ -4,6 +4,6 @@ export const getPokemonAll = async (limit:number= 10, offset:number = 0): Promis
   return await http.get<AxiosInstance>(`pokemon?limit=${limit}&offset=${offset}`);
 };
 
-export const getPokemonById = async (id: number): Promise<any> => {
-  return await http.get<AxiosInstance>(`pokemon/${id}`);
+export const getPokemonByName = async (name: string): Promise<any> => {
+  return await http.get<AxiosInstance>(`pokemon/${name}`);
 }

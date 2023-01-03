@@ -1,33 +1,50 @@
-// import { FC, useEffect, useState } from "react";
-// import { Card } from "antd";
-// // import { getPokemonById } from "../services/pokemon.services";
+import { useEffect, useState } from "react";
+import React from "react";
+import { Card } from "antd";
+import { getPokemonByName } from "../services/pokemon.services";
+interface DataType {
+    name: string;
+    url: string;
+}
+interface PokemonCardProps {
+    pokemon: DataType;
+}
+const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any ) => {
+    const [imagePokemon, setImagePokemon] = useState<string>("");
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [idPokemon, setIdPokemon] = useState<number>(1);
+    const [typePokemon, setTypePokemon] = useState<string>("");
 
-// const PokemonCard: FC = (pokemon) => {
-// //   const [imagePokemon, setImagePokemon] = useState<string>("");
-// //   const [idPokemon, setIdPokemon] = useState<number>(1);
-// //   const [typePokemon, setTypePokemon] = useState<string>("");
+    useEffect(() => {
+        const getPokemon = async () => {
+            setIsLoading(true);
+            try {
+                const { data, status } = await getPokemonByName(pokemon.name);
+                if (status === 200) {
+                    console.log(data);
+                    setIdPokemon(data.id);
+                    setTypePokemon(data.types);
+                    setImagePokemon(data.sprites.front_default);
+                }
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        getPokemon();
+    }, [pokemon.url]);
 
-// //   useEffect(() => {
-// //     const getPokemon = async () => {
-// //       try {
-// //         const { data, status } = await getPokemonById(1);
-// //         if (status === 200) {
-// //             setIdPokemon(data.id);
-// //             setTypePokemon(data.types);
-// //         }
-// //       } catch (error) {
-// //         console.log(error);
-// //       }
-// //     };
-// //     getPokemon();
-// //   }, [idPokemon]);
+    return pokemon ? (
+        <Card
+            title={pokemon.name}
+            cover={<img alt={pokemon.name} src={imagePokemon} />}
+            loading={isLoading}
+        >
+            #{idPokemon}
+        </Card>
+    ) : null;
+};
 
-//   return (
-//     <>
-//       <Card title={pokemon.name}>{pokemon.url}</Card>
-//     </>
-//   );
-// };
-
-// export default PokemonCard;
-export {};
+export default PokemonCard;
+// export {};
