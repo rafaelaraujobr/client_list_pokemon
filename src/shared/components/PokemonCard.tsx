@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import React from "react";
 import { Badge, Card, Col, Image, Progress, Row, Statistic, Tag } from "antd";
 import { getPokemonByName } from "../services/pokemon.services";
+import { DashboardOutlined, ColumnHeightOutlined } from "@ant-design/icons";
 import Modal from "antd/es/modal/Modal";
 // import axios from "axios";
 interface DataType {
@@ -142,18 +143,22 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                         </Tag>
                     ))}
                 </div>
-                <Row style={{ marginTop: 20 }} gutter={{ xs: 12, sm: 16, md: 24, lg: 32 }}>
+                <Row
+                    style={{ marginTop: 20 }}
+                    gutter={{ xs: 12, sm: 16, md: 24, lg: 32 }}
+                >
                     <Col span={12}>
                         <Row>
                             <Col span={12}>
                                 <Statistic
                                     title="Peso"
+                                    prefix={<DashboardOutlined />}
                                     value={weightPokemon}
                                     decimalSeparator="."
                                     formatter={(value) => `${+value / 10} kg`}
                                 />
                                 <Statistic
-                                    title="Altura"
+                                    title="Altura" prefix={<ColumnHeightOutlined />}
                                     value={heightPokemon}
                                     decimalSeparator="."
                                     formatter={(value) => `${+value / 10} m`}
