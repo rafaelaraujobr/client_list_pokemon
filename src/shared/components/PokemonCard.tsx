@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import React from "react";
-import { Badge, Card, Col, Image, Progress, Row, Statistic, Tag, Typography } from "antd";
+import {
+    Badge,
+    Card,
+    Col,
+    Image,
+    Progress,
+    Row,
+    Statistic,
+    Tag,
+} from "antd";
 
 import { getPokemonByName } from "../services/pokemon.services";
 import { DashboardOutlined, ColumnHeightOutlined } from "@ant-design/icons";
@@ -13,8 +22,6 @@ interface DataType {
 interface PokemonCardProps {
     pokemon: DataType;
 }
-
-const { Text } = Typography;
 const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
     const [imagePokemon, setImagePokemon] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -178,9 +185,11 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                                     decimalSeparator="."
                                     formatter={(value) => `${+value / 10} m`}
                                 />
-                                <div><Text type="secondary">Habilidades</Text></div>
+                                 <div style={{ marginBottom: "10px", color: "rgba(0, 0, 0, 0.45)", fontSize: "14px" }}>
+                                   Habilidades
+                                </div>
                                 {abilitiesPokemon.map((item: any) => (
-                                    <Tag style={{padding:"0.5em 1em"}}>
+                                    <Tag style={{ padding: "0.25em 0.5em" }}>
                                         {item}
                                     </Tag>
                                 ))}
@@ -188,6 +197,9 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                         </Row>
                     </Col>
                     <Col span={12}>
+                        <div style={{ marginBottom: "10px", color: "rgba(0, 0, 0, 0.45)", fontSize: "14px" }}>
+                           Statisticas
+                        </div>
                         <div style={{ width: 170 }}>
                             {statsPokemon.map((stat: any) => (
                                 <Progress
