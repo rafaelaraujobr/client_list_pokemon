@@ -30,12 +30,12 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
             `${str.slice(0, 1).toUpperCase()}${str.slice(1)}`;
 
         return (
-            <div>
+            <>
                 {nameSplit.reduce(
                     (a, b) => `${capitalize(a)} ${capitalize(b)}`,
                     ""
                 )}
-            </div>
+            </>
         );
     }
 
@@ -123,7 +123,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                         <Image src={`${imagePokemon}`} preview={false} />
                     </div>
                     <div style={{ display: "flex", justifyContent: "center" }}>
-                        <RenderName name={pokemon.name} />
+                        <h2><RenderName name={pokemon.name} /></h2>
                     </div>
                     <div style={{ display: "flex", justifyContent: "center" }}>
                         {typePokemon.map((type: any) => (
@@ -141,21 +141,21 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                 </Card>
             </Badge.Ribbon>
             <Modal
-                title={pokemon.name}
+                title={<RenderName name={pokemon.name} />}
                 open={isModalOpen}
                 onCancel={handleCancel}
                 style={{ top: 20 }}
                 footer={null}
-                width={800}
+                width={500}
             >
                 <div style={{ display: "flex", justifyContent: "center" }}>
-                    <Image src={`${imagePokemon}`} width={300} />
+                    <Image src={`${imagePokemon}`} width={180} />
                 </div>
                 <div style={{ display: "flex", justifyContent: "center" }}>
                     <h3>#{idPokemon}</h3>
                 </div>
                 <div style={{ display: "flex", justifyContent: "center" }}>
-                    <h1>{pokemon.name}</h1>
+                    <h1><RenderName name={pokemon.name} /></h1>
                 </div>
                 <div style={{ display: "flex", justifyContent: "center" }}>
                     {typePokemon.map((type: any) => (
