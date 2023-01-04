@@ -177,7 +177,7 @@ const PokemonList: FC = () => {
                 dataSource={pokemonsFilter}
                 renderItem={(item: DataType, index) => (
                     <List.Item>
-                        <PokemonCard pokemon={item} />
+                        <PokemonCard pokemon={item.name} />
                     </List.Item>
                 )}
                 pagination={{

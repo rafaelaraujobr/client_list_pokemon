@@ -1,28 +1,16 @@
 import { useEffect, useState } from "react";
 import React from "react";
-import {
-    Badge,
-    Card,
-    Col,
-    Image,
-    Progress,
-    Row,
-    Statistic,
-    Tag,
-} from "antd";
+import { Badge, Card, Col, Image, Progress, Row, Statistic, Tag } from "antd";
 
 import { getPokemonByName } from "../services/pokemon.services";
 import { DashboardOutlined, ColumnHeightOutlined } from "@ant-design/icons";
 import Modal from "antd/es/modal/Modal";
 // import axios from "axios";
-interface DataType {
-    name: string;
-    url: string;
-}
+
 interface PokemonCardProps {
-    pokemon: DataType;
+    pokemon: string;
 }
-const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
+const PokemonCard: React.FC<PokemonCardProps> = ({pokemon}) => {
     const [imagePokemon, setImagePokemon] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [idPokemon, setIdPokemon] = useState<number>(1);
@@ -30,8 +18,25 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [statsPokemon, setStatsPokemon] = useState<any[]>([]);
     const [weightPokemon, setWeightPokemon] = useState<number>(0);
+    const [namePokemon, setNamePokemon] = useState<string>("");
     const [heightPokemon, setHeightPokemon] = useState<number>(0);
     const [abilitiesPokemon, setAbilitiesPokemon] = useState<any[]>([]);
+
+    function parseName(name: string) {
+        const nameSplit = name.includes("-") ? name.split("-") : [name];
+        const capitalize = (str: string) =>
+            `${str.slice(0, 1).toUpperCase()}${str.slice(1)}`;
+        const finalName = nameSplit.reduce(
+            (a, b) => `${capitalize(a)} ${capitalize(b)}`,
+            ""
+        );
+        console.log(
+            "🚀 ~ file: PokemonCard.tsx:28 ~ renderName ~ name",
+            finalName
+        );
+
+        return finalName;
+    }
 
     // const pad = (number: number, length: number) => {
     //     let str = "" + number;
@@ -80,7 +85,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
         const getPokemon = async () => {
             setIsLoading(true);
             try {
-                const { data, status } = await getPokemonByName(pokemon.name);
+                const { data, status } = await getPokemonByName(pokemon);
                 if (status === 200) {
                     setIdPokemon(data.id);
                     setTypePokemon(data.types);
@@ -89,6 +94,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                     setWeightPokemon(data.weight);
                     setHeightPokemon(data.height);
                     setAbilitiesPokemon(parseAbilities(data.abilities));
+                    setNamePokemon(parseName(data.name));
 
                     // setImagePokemon(
                     //     await getPokemonImageUrl(
@@ -104,7 +110,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
             }
         };
         getPokemon();
-    }, [pokemon.url]);
+    }, [pokemon]);
 
     return pokemon ? (
         <>
@@ -112,12 +118,17 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                 text={`#${idPokemon}`}
                 className={`card-pokemon ${pokemonType(typePokemon)}`}
             >
-                <Card hoverable loading={isLoading} onClick={showModal}  className={`card-pokemon`}>
+                <Card
+                    hoverable
+                    loading={isLoading}
+                    onClick={showModal}
+                    className={`card-pokemon`}
+                >
                     <div style={{ display: "flex", justifyContent: "center" }}>
                         <Image src={`${imagePokemon}`} preview={false} />
                     </div>
-                    <div style={{ display: "flex", justifyContent: "center" }}>
-                        <h1>{pokemon.name}</h1>
+                    <div style={{ display: "flex", justifyContent: "center", color: "black" }}>
+                        <h1>{namePokemon}</h1>
                     </div>
                     <div style={{ display: "flex", justifyContent: "center" }}>
                         {typePokemon.map((type: any) => (
@@ -135,7 +146,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                 </Card>
             </Badge.Ribbon>
             <Modal
-                title={pokemon.name}
+                title={pokemon}
                 open={isModalOpen}
                 onCancel={handleCancel}
                 style={{ top: 20 }}
@@ -149,7 +160,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                     <h3>#{idPokemon}</h3>
                 </div>
                 <div style={{ display: "flex", justifyContent: "center" }}>
-                    <h1>{pokemon.name}</h1>
+                    <h1>{namePokemon}</h1>
                 </div>
                 <div style={{ display: "flex", justifyContent: "center" }}>
                     {typePokemon.map((type: any) => (
@@ -185,8 +196,14 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                                     decimalSeparator="."
                                     formatter={(value) => `${+value / 10} m`}
                                 />
-                                 <div style={{ marginBottom: "10px", color: "rgba(0, 0, 0, 0.45)", fontSize: "14px" }}>
-                                   Habilidades
+                                <div
+                                    style={{
+                                        marginBottom: "10px",
+                                        color: "rgba(0, 0, 0, 0.45)",
+                                        fontSize: "14px",
+                                    }}
+                                >
+                                    Habilidades
                                 </div>
                                 {abilitiesPokemon.map((item: any) => (
                                     <Tag style={{ padding: "0.25em 0.5em" }}>
@@ -197,8 +214,14 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                         </Row>
                     </Col>
                     <Col span={12}>
-                        <div style={{ marginBottom: "10px", color: "rgba(0, 0, 0, 0.45)", fontSize: "14px" }}>
-                           Statisticas
+                        <div
+                            style={{
+                                marginBottom: "10px",
+                                color: "rgba(0, 0, 0, 0.45)",
+                                fontSize: "14px",
+                            }}
+                        >
+                            Statisticas
                         </div>
                         <div style={{ width: 170 }}>
                             {statsPokemon.map((stat: any) => (
