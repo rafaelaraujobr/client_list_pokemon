@@ -3,6 +3,7 @@ import React from "react";
 import { Badge, Card, Image, Progress, Tag } from "antd";
 import { getPokemonByName } from "../services/pokemon.services";
 import Modal from "antd/es/modal/Modal";
+import axios from "axios";
 interface DataType {
     name: string;
     url: string;
@@ -10,6 +11,7 @@ interface DataType {
 interface PokemonCardProps {
     pokemon: DataType;
 }
+
 const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
     const [imagePokemon, setImagePokemon] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -23,15 +25,19 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
         while (str.length < length) str = "0" + str;
         return str;
     };
-    const getPokemonImageUrl = (id: number) =>
-        `/thumbnails-compressed/${pad(id, 3)}.png`;
+
+    const getPokemonImageUrl = async (id: number, url: string) => {
+        try {
+            await axios.get(`/thumbnails-compressed/${pad(id, 3)}.png`);
+            return `/thumbnails-compressed/${pad(id, 3)}.png`;
+        } catch (error) {
+            console.log(error);
+            return url;
+        }
+    };
 
     const showModal = () => {
         setIsModalOpen(true);
-    };
-
-    const handleOk = () => {
-        setIsModalOpen(false);
     };
 
     const handleCancel = () => {
@@ -53,12 +59,15 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
             try {
                 const { data, status } = await getPokemonByName(pokemon.name);
                 if (status === 200) {
-                    console.log(data);
                     setIdPokemon(data.id);
                     setTypePokemon(data.types);
                     setStatsPokemon(data.stats);
-                    // setImagePokemon(data.sprites.front_default);
-                    await setImagePokemon(getPokemonImageUrl(data.id));
+                    setImagePokemon(
+                        await getPokemonImageUrl(
+                            data.id,
+                            data.sprites.front_default
+                        )
+                    );
                 }
             } catch (error) {
                 console.log(error);
@@ -72,7 +81,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
     return pokemon ? (
         <>
             <Badge.Ribbon
-                text={`#${idPokemon} -  ${pokemon.name}`}
+                text={`#${idPokemon}`}
                 className={`card-pokemon ${pokemonType(typePokemon)}`}
             >
                 <Card hoverable loading={isLoading} onClick={showModal}>
@@ -81,8 +90,9 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                         src={`${imagePokemon}`}
                         preview={false}
                     />
+                            <h1>{pokemon.name}</h1>
                     <p>{pokemonType(typePokemon)}</p>
-                </Card>
+                </Card> 
             </Badge.Ribbon>
             <Modal
                 title={pokemon.name}

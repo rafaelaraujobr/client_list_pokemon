@@ -1,6 +1,6 @@
-import { FC, useInsertionEffect, useState } from "react";
-import { Pagination, List } from "antd";
-import type { PaginationProps } from "antd";
+import { FC, useEffect, useState } from "react";
+import { Input, List } from "antd";
+// import type { PaginationProps } from "antd";
 import { getPokemonAll } from "../services/pokemon.services";
 // import {
 //     EditOutlined,
@@ -17,29 +17,24 @@ interface DataType {
 
 const PokemonList: FC = () => {
     const [pokemons, setPokemons] = useState<DataType[]>([]);
-    const [totalPokemon, setTotalPokemon] = useState(1154);
+    const [pokemonsFilter, setPokemonsFilter] = useState<DataType[]>([]);
+    // const [totalPokemon, setTotalPokemon] = useState(1154);
     const [isLoading, setIsLoading] = useState(false);
     const [perPage, setPerPage] = useState(18);
-    const [currentPage, setCurrentPage] = useState(1);
 
-    const onChange: PaginationProps["onChange"] = (page, perPage) => {
-        setCurrentPage(page * perPage - perPage);
-        setPerPage(perPage);
-    };
+    // const onChange: PaginationProps["onChange"] = (page, perPage) => {
+    //     setCurrentPage(page * perPage - perPage);
+    //     setPerPage(perPage);
+    // };
 
-    // let rows: DataType[] = [];
-
-    useInsertionEffect(() => {
+    useEffect(() => {
         const getAll = async () => {
             setIsLoading(true);
             try {
-                const { data, status } = await getPokemonAll(
-                    perPage,
-                    currentPage
-                );
+                const { data, status } = await getPokemonAll(1000);
                 if (status === 200) {
-                    setTotalPokemon(data.count);
                     setPokemons(data.results);
+                    setPokemonsFilter(data.results);
                 }
             } catch (error) {
                 console.log(error);
@@ -50,48 +45,47 @@ const PokemonList: FC = () => {
             }
         };
         getAll();
-    }, [currentPage, perPage]);
+    }, []);
+
+    const filterPokemon = (e: any) => {
+        const val = e.target.value;
+        if (val === "") {
+            setPokemonsFilter(pokemons);
+            return;
+        }
+
+        setPokemonsFilter(() => {
+            // const needle = val.toLowerCase();
+            return pokemons.filter((pokemon: DataType) =>
+                pokemon.name.toLowerCase().includes(val.toLowerCase())
+            );
+        });
+    };
 
     return (
         <>
+            <Input placeholder="Buscar" onChange={filterPokemon} />
             <List
                 grid={{ gutter: 5, xs: 1, sm: 2, md: 4, lg: 4, xl: 5, xxl: 6 }}
-                dataSource={pokemons}
-                renderItem={(item: DataType) => (
+                dataSource={pokemonsFilter}
+                renderItem={(item: DataType, index) => (
                     <List.Item>
-                        <PokemonCard pokemon={item} key={item.name}/>
-                        {/* <Card
-                            cover={
-                                <img
-                                    alt={item.name}
-                                    src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                                />
-                            }
-                            actions={[
-                                <SettingOutlined key="setting" />,
-                                <EditOutlined key="edit" />,
-                                <EllipsisOutlined key="ellipsis" />,
-                            ]}
-                        >
-                            <Skeleton loading={isLoading} avatar active>
-                                <Meta
-                                    avatar={
-                                        <Avatar src="https://upload.wikimedia.org/wikipedia/commons/5/53/Pok%C3%A9_Ball_icon.svg" />
-                                    }
-                                    title={item.name}
-                                    // description={item.url}
-                                />
-                            </Skeleton>
-                        </Card> */}
+                        <PokemonCard pokemon={item} />
                     </List.Item>
                 )}
+                pagination={{
+                    onChange: (page, perPage) => {
+                        setPerPage(perPage);
+                    },
+                    pageSize: perPage,
+                }}
             />
-            <Pagination
+            {/* <Pagination
                 defaultCurrent={currentPage}
                 defaultPageSize={perPage}
                 total={totalPokemon}
                 onChange={onChange}
-            />
+            /> */}
         </>
     );
 };
