@@ -128,7 +128,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({pokemon}) => {
                         <Image src={`${imagePokemon}`} preview={false} />
                     </div>
                     <div style={{ display: "flex", justifyContent: "center", color: "black" }}>
-                        <h1>{namePokemon}</h1>
+                        <h3>{namePokemon}</h3>
                     </div>
                     <div style={{ display: "flex", justifyContent: "center" }}>
                         {typePokemon.map((type: any) => (
