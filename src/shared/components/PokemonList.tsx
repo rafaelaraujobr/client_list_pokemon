@@ -173,7 +173,7 @@ const PokemonList: FC = () => {
                 />
             </div>
             <List
-                grid={{ gutter: 0, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 4 }}
+                grid={{ gutter: 0, xs: 1, sm: 2, md: 3, lg: 4, xl: 4, xxl: 4 }}
                 dataSource={pokemonsFilter}
                 renderItem={(item: DataType, index) => (
                     <List.Item>

@@ -1,19 +1,9 @@
 import { useEffect, useState } from "react";
 import React from "react";
-import {
-    Badge,
-    Card,
-    Col,
-    Descriptions,
-    Image,
-    Progress,
-    Row,
-    Statistic,
-    Tag,
-} from "antd";
+import { Badge, Card, Col, Image, Progress, Row, Statistic, Tag } from "antd";
 import { getPokemonByName } from "../services/pokemon.services";
 import Modal from "antd/es/modal/Modal";
-import axios from "axios";
+// import axios from "axios";
 interface DataType {
     name: string;
     url: string;
@@ -32,21 +22,21 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
     const [weightPokemon, setWeightPokemon] = useState<number>(0);
     const [heightPokemon, setHeightPokemon] = useState<number>(0);
 
-    const pad = (number: number, length: number) => {
-        let str = "" + number;
-        while (str.length < length) str = "0" + str;
-        return str;
-    };
+    // const pad = (number: number, length: number) => {
+    //     let str = "" + number;
+    //     while (str.length < length) str = "0" + str;
+    //     return str;
+    // };
 
-    const getPokemonImageUrl = async (id: number, url: string) => {
-        try {
-            await axios.get(`/thumbnails-compressed/${pad(id, 3)}.png`);
-            return `/thumbnails-compressed/${pad(id, 3)}.png`;
-        } catch (error) {
-            console.log(error);
-            return url;
-        }
-    };
+    // const getPokemonImageUrl = async (id: number, url: string) => {
+    //     try {
+    //         await axios.get(`/thumbnails-compressed/${pad(id, 3)}.png`);
+    //         return `/thumbnails-compressed/${pad(id, 3)}.png`;
+    //     } catch (error) {
+    //         console.log(error);
+    //         return url;
+    //     }
+    // };
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -110,7 +100,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                     <div style={{ display: "flex", justifyContent: "center" }}>
                         {typePokemon.map((type: any) => (
                             <Tag
-                                className={`card-pokemon 
+                                className={`card-pokemon  type-pokemon
                         ${
                             type.type.name[0].toUpperCase() +
                             type.type.name.slice(1)
@@ -142,7 +132,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                 <div style={{ display: "flex", justifyContent: "center" }}>
                     {typePokemon.map((type: any) => (
                         <Tag
-                            className={`card-pokemon 
+                            className={`card-pokemon type-pokemon
                         ${
                             type.type.name[0].toUpperCase() +
                             type.type.name.slice(1)
@@ -152,7 +142,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                         </Tag>
                     ))}
                 </div>
-                <Row style={{ marginTop: 20 }}>
+                <Row style={{ marginTop: 20 }} gutter={{ xs: 12, sm: 16, md: 24, lg: 32 }}>
                     <Col span={12}>
                         <Row>
                             <Col span={12}>
@@ -176,7 +166,20 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                             {statsPokemon.map((stat: any) => (
                                 <Progress
                                     percent={stat.base_stat}
-                                    format={(percent) => `${stat.stat.name}`}
+                                    format={(value) =>
+                                        `${
+                                            stat.stat.name
+                                                ? stat.stat.name ===
+                                                  "special-attack"
+                                                    ? "Sp. Atk"
+                                                    : stat.stat.name ===
+                                                      "special-defense"
+                                                    ? "Sp. Def"
+                                                    : stat.stat.name[0].toUpperCase() +
+                                                      stat.stat.name.slice(1)
+                                                : null
+                                        } ${value}`
+                                    }
                                 />
                             ))}
                         </div>
