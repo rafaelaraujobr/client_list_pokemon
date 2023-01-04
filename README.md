@@ -7,7 +7,7 @@
 
 ## 🚀 Sobre o Projeto
 
-Este projeto consiste em criar uma pokedex consumindo uma [API](pokeapi.co), a ideia e colocar conceitos que estou aprendendo ao longo de minha jornada. Projeto ainda em construção
+Este projeto consiste em criar uma pokedex consumindo uma [API](pokeapi.co)
 
 ## 🔨 Tecnologias:
 
