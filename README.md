@@ -1,5 +1,5 @@
 <h1 align="center">
-🚧 Pokedex  | Em Construção 🚧
+🚧 Pokedex 🚧
 </h1>
 <h2 align="center">
   Bem Vindo a Pokedex
@@ -9,20 +9,12 @@
 
 Este projeto consiste em criar uma pokedex consumindo uma [API](pokeapi.co), a ideia e colocar conceitos que estou aprendendo ao longo de minha jornada. Projeto ainda em construção
 
-## 🎨 Layout
-
-<div align="center">
-
-<button><a target="_blank" href="https://client-list-pokemon.vercel.app"><img alt="netlify" src=".github/netlify.svg" ></img></a></button>
-
-</div>
-
 ## 🔨 Tecnologias:
 
 -   [ReactJs][reactjs]
 -   [Axios][axios]
 -   [Ant Design][ant design]
--   [Sass] [sass]
+-   [Sass][sass]
 
 ## 🚀 Como rodar este projeto
 
