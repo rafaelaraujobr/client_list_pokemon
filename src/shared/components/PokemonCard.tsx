@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import React from "react";
-import { Badge, Card, Col, Image, Progress, Row, Statistic, Tag } from "antd";
+import { Badge, Card, Col, Image, Progress, Row, Statistic, Tag, Typography } from "antd";
+
 import { getPokemonByName } from "../services/pokemon.services";
 import { DashboardOutlined, ColumnHeightOutlined } from "@ant-design/icons";
 import Modal from "antd/es/modal/Modal";
@@ -13,6 +14,7 @@ interface PokemonCardProps {
     pokemon: DataType;
 }
 
+const { Text } = Typography;
 const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
     const [imagePokemon, setImagePokemon] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -22,6 +24,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
     const [statsPokemon, setStatsPokemon] = useState<any[]>([]);
     const [weightPokemon, setWeightPokemon] = useState<number>(0);
     const [heightPokemon, setHeightPokemon] = useState<number>(0);
+    const [abilitiesPokemon, setAbilitiesPokemon] = useState<any[]>([]);
 
     // const pad = (number: number, length: number) => {
     //     let str = "" + number;
@@ -41,6 +44,15 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
 
     const showModal = () => {
         setIsModalOpen(true);
+    };
+
+    const parseAbilities = (abilities: any) => {
+        return abilities.map((ability: any) => {
+            return (
+                ability.ability.name[0].toUpperCase() +
+                ability.ability.name.slice(1)
+            );
+        });
     };
 
     const handleCancel = () => {
@@ -69,6 +81,8 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                     setImagePokemon(data.sprites.front_default);
                     setWeightPokemon(data.weight);
                     setHeightPokemon(data.height);
+                    setAbilitiesPokemon(parseAbilities(data.abilities));
+
                     // setImagePokemon(
                     //     await getPokemonImageUrl(
                     //         data.id,
@@ -158,11 +172,18 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                                     formatter={(value) => `${+value / 10} kg`}
                                 />
                                 <Statistic
-                                    title="Altura" prefix={<ColumnHeightOutlined />}
+                                    title="Altura"
+                                    prefix={<ColumnHeightOutlined />}
                                     value={heightPokemon}
                                     decimalSeparator="."
                                     formatter={(value) => `${+value / 10} m`}
                                 />
+                                <div><Text type="secondary">Habilidades</Text></div>
+                                {abilitiesPokemon.map((item: any) => (
+                                    <Tag style={{padding:"0.5em 1em"}}>
+                                        {item}
+                                    </Tag>
+                                ))}
                             </Col>
                         </Row>
                     </Col>
