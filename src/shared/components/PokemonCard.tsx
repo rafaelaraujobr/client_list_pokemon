@@ -1,15 +1,6 @@
 import { useEffect, useState } from "react";
 import React from "react";
-import {
-    Badge,
-    Card,
-    Col,
-    Image,
-    Progress,
-    Row,
-    Statistic,
-    Tag,
-} from "antd";
+import { Badge, Card, Col, Image, Progress, Row, Statistic, Tag } from "antd";
 
 import { getPokemonByName } from "../services/pokemon.services";
 import { DashboardOutlined, ColumnHeightOutlined } from "@ant-design/icons";
@@ -32,6 +23,21 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
     const [weightPokemon, setWeightPokemon] = useState<number>(0);
     const [heightPokemon, setHeightPokemon] = useState<number>(0);
     const [abilitiesPokemon, setAbilitiesPokemon] = useState<any[]>([]);
+
+    function RenderName({ name }: { name: string }) {
+        const nameSplit = name.includes("-") ? name.split("-") : [name];
+        const capitalize = (str: string) =>
+            `${str.slice(0, 1).toUpperCase()}${str.slice(1)}`;
+
+        return (
+            <div>
+                {nameSplit.reduce(
+                    (a, b) => `${capitalize(a)} ${capitalize(b)}`,
+                    ""
+                )}
+            </div>
+        );
+    }
 
     // const pad = (number: number, length: number) => {
     //     let str = "" + number;
@@ -117,7 +123,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                         <Image src={`${imagePokemon}`} preview={false} />
                     </div>
                     <div style={{ display: "flex", justifyContent: "center" }}>
-                        <h1>{pokemon.name}</h1>
+                        <RenderName name={pokemon.name} />
                     </div>
                     <div style={{ display: "flex", justifyContent: "center" }}>
                         {typePokemon.map((type: any) => (
@@ -185,8 +191,14 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                                     decimalSeparator="."
                                     formatter={(value) => `${+value / 10} m`}
                                 />
-                                 <div style={{ marginBottom: "10px", color: "rgba(0, 0, 0, 0.45)", fontSize: "14px" }}>
-                                   Habilidades
+                                <div
+                                    style={{
+                                        marginBottom: "10px",
+                                        color: "rgba(0, 0, 0, 0.45)",
+                                        fontSize: "14px",
+                                    }}
+                                >
+                                    Habilidades
                                 </div>
                                 {abilitiesPokemon.map((item: any) => (
                                     <Tag style={{ padding: "0.25em 0.5em" }}>
@@ -197,8 +209,14 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                         </Row>
                     </Col>
                     <Col span={12}>
-                        <div style={{ marginBottom: "10px", color: "rgba(0, 0, 0, 0.45)", fontSize: "14px" }}>
-                           Statisticas
+                        <div
+                            style={{
+                                marginBottom: "10px",
+                                color: "rgba(0, 0, 0, 0.45)",
+                                fontSize: "14px",
+                            }}
+                        >
+                            Statisticas
                         </div>
                         <div style={{ width: 170 }}>
                             {statsPokemon.map((stat: any) => (
