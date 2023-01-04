@@ -90,7 +90,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({pokemon}) => {
                     setIdPokemon(data.id);
                     setTypePokemon(data.types);
                     setStatsPokemon(data.stats);
-                    setImagePokemon(data.sprites.front_default);
+                    setImagePokemon(data.sprites.other.home.front_default);
                     setWeightPokemon(data.weight);
                     setHeightPokemon(data.height);
                     setAbilitiesPokemon(parseAbilities(data.abilities));
