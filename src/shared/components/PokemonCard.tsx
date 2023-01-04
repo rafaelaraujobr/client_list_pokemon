@@ -1,6 +1,16 @@
 import { useEffect, useState } from "react";
 import React from "react";
-import { Badge, Card, Image, Progress, Tag } from "antd";
+import {
+    Badge,
+    Card,
+    Col,
+    Descriptions,
+    Image,
+    Progress,
+    Row,
+    Statistic,
+    Tag,
+} from "antd";
 import { getPokemonByName } from "../services/pokemon.services";
 import Modal from "antd/es/modal/Modal";
 import axios from "axios";
@@ -19,6 +29,8 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
     const [typePokemon, setTypePokemon] = useState<any[]>([]);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [statsPokemon, setStatsPokemon] = useState<any[]>([]);
+    const [weightPokemon, setWeightPokemon] = useState<number>(0);
+    const [heightPokemon, setHeightPokemon] = useState<number>(0);
 
     const pad = (number: number, length: number) => {
         let str = "" + number;
@@ -45,11 +57,12 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
     };
 
     const pokemonType = (typePokemon: any) => {
-        return typePokemon
+        let [type] = typePokemon;
+        return type
             ? typePokemon.map(
                   (type: any) =>
                       type.type.name[0].toUpperCase() + type.type.name.slice(1)
-              )
+              )[0]
             : null;
     };
 
@@ -62,12 +75,15 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                     setIdPokemon(data.id);
                     setTypePokemon(data.types);
                     setStatsPokemon(data.stats);
-                    setImagePokemon(
-                        await getPokemonImageUrl(
-                            data.id,
-                            data.sprites.front_default
-                        )
-                    );
+                    setImagePokemon(data.sprites.front_default);
+                    setWeightPokemon(data.weight);
+                    setHeightPokemon(data.height);
+                    // setImagePokemon(
+                    //     await getPokemonImageUrl(
+                    //         data.id,
+                    //         data.sprites.front_default
+                    //     )
+                    // );
                 }
             } catch (error) {
                 console.log(error);
@@ -85,14 +101,26 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                 className={`card-pokemon ${pokemonType(typePokemon)}`}
             >
                 <Card hoverable loading={isLoading} onClick={showModal}>
-                    <Image
-                        // style={{margin: "0 auto"}}
-                        src={`${imagePokemon}`}
-                        preview={false}
-                    />
-                            <h1>{pokemon.name}</h1>
-                    <p>{pokemonType(typePokemon)}</p>
-                </Card> 
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                        <Image src={`${imagePokemon}`} preview={false} />
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                        <h1>{pokemon.name}</h1>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                        {typePokemon.map((type: any) => (
+                            <Tag
+                                className={`card-pokemon 
+                        ${
+                            type.type.name[0].toUpperCase() +
+                            type.type.name.slice(1)
+                        }`}
+                            >
+                                {type.type.name}
+                            </Tag>
+                        ))}
+                    </div>
+                </Card>
             </Badge.Ribbon>
             <Modal
                 title={pokemon.name}
@@ -100,28 +128,60 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                 onCancel={handleCancel}
                 style={{ top: 20 }}
                 footer={null}
+                width={800}
             >
-                <Image src={`${imagePokemon}`} preview={false} />
-                <p>{pokemonType(typePokemon)}</p>
-                {typePokemon.map((type: any) => (
-                    <Tag
-                        className={`card-pokemon 
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                    <Image src={`${imagePokemon}`} width={300} />
+                </div>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                    <h3>#{idPokemon}</h3>
+                </div>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                    <h1>{pokemon.name}</h1>
+                </div>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                    {typePokemon.map((type: any) => (
+                        <Tag
+                            className={`card-pokemon 
                         ${
                             type.type.name[0].toUpperCase() +
                             type.type.name.slice(1)
                         }`}
-                    >
-                        {type.type.name}
-                    </Tag>
-                ))}
-                <div style={{ width: 170 }}>
-                    {statsPokemon.map((stat: any) => (
-                        <Progress
-                            percent={stat.base_stat}
-                            format={(percent) => `${stat.stat.name}`}
-                        />
+                        >
+                            {type.type.name}
+                        </Tag>
                     ))}
                 </div>
+                <Row style={{ marginTop: 20 }}>
+                    <Col span={12}>
+                        <Row>
+                            <Col span={12}>
+                                <Statistic
+                                    title="Peso"
+                                    value={weightPokemon}
+                                    decimalSeparator="."
+                                    formatter={(value) => `${+value / 10} kg`}
+                                />
+                                <Statistic
+                                    title="Altura"
+                                    value={heightPokemon}
+                                    decimalSeparator="."
+                                    formatter={(value) => `${+value / 10} m`}
+                                />
+                            </Col>
+                        </Row>
+                    </Col>
+                    <Col span={12}>
+                        <div style={{ width: 170 }}>
+                            {statsPokemon.map((stat: any) => (
+                                <Progress
+                                    percent={stat.base_stat}
+                                    format={(percent) => `${stat.stat.name}`}
+                                />
+                            ))}
+                        </div>
+                    </Col>
+                </Row>
             </Modal>
         </>
     ) : null;

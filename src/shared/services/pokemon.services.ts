@@ -12,3 +12,8 @@ export const getPokemonAll = async (
 export const getPokemonByName = async (name: string): Promise<any> => {
     return await http.get<AxiosInstance>(`pokemon/${name}`);
 };
+
+export const getPokemonByType = async (type: string): Promise<any> => {
+    return await http.get<AxiosInstance>(`type/${type}`);
+};
+
