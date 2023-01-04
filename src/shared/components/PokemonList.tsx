@@ -13,7 +13,7 @@ interface DataType {
 const PokemonList: FC = () => {
     const [pokemons, setPokemons] = useState<DataType[]>([]);
     const [pokemonsFilter, setPokemonsFilter] = useState<DataType[]>([]);
-    // const [totalPokemon, setTotalPokemon] = useState(1154);
+    const [totalPokemon] = useState(1154);
     const [isLoading, setIsLoading] = useState(false);
     const [perPage, setPerPage] = useState(20);
 
@@ -24,7 +24,7 @@ const PokemonList: FC = () => {
     const getAll = async () => {
         setIsLoading(true);
         try {
-            const { data, status } = await getPokemonAll(1000);
+            const { data, status } = await getPokemonAll(totalPokemon);
             if (status === 200) {
                 setPokemons(data.results);
                 setPokemonsFilter(data.results);
