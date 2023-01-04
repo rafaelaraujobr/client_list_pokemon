@@ -112,7 +112,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }: any) => {
                 text={`#${idPokemon}`}
                 className={`card-pokemon ${pokemonType(typePokemon)}`}
             >
-                <Card hoverable loading={isLoading} onClick={showModal}>
+                <Card hoverable loading={isLoading} onClick={showModal}  className={`card-pokemon`}>
                     <div style={{ display: "flex", justifyContent: "center" }}>
                         <Image src={`${imagePokemon}`} preview={false} />
                     </div>

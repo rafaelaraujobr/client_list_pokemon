@@ -2,9 +2,15 @@
     font-family: "Poppins", sans-serif
 
 .card-pokemon
+    transition: all .5s
     color: white !important
     &.type-pokemon
         padding: 0.25rem 0.8rem !important
+    &:hover
+        transform: scale(1.05)
+        .ant-image-img
+            animation: wiggle 75ms infinite
+            animation-timing-function: linear
     &.Normal
         border-color: #6d6d4e
         background-color: #a8a878
@@ -76,3 +82,11 @@
     &.Fairy
         border-color: #fa58f4
         background-color: #f781d8
+
+    @keyframes wiggle
+        0%
+            transform: translate(2px, 2px) scale(2)
+        50%
+            transform: translate(-2px, 0) scale(2)
+        100%
+            transform: translate(2px,0) scale(2)
